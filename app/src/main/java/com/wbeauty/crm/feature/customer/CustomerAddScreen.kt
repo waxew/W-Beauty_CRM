@@ -1,8 +1,42 @@
 package com.wbeauty.crm.feature.customer
 
+import androidx.compose.foundation.layout.Column
+import androidx.compose.material3.Button
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.hilt.navigation.compose.hiltViewModel
 
 @Composable
-fun CustomerAddScreen() {
-    // فرم افزودن مشتری در مرحله بعد تکمیل می‌شود
+fun CustomerAddScreen(
+    viewModel: CustomerViewModel = hiltViewModel()
+) {
+    var name by remember { mutableStateOf("") }
+    var phone by remember { mutableStateOf("") }
+
+    Column {
+        TextField(
+            value = name,
+            onValueChange = { name = it },
+            label = { Text("نام مشتری") }
+        )
+
+        TextField(
+            value = phone,
+            onValueChange = { phone = it },
+            label = { Text("شماره تماس") }
+        )
+
+        Button(
+            onClick = {
+                viewModel.addCustomer(name, phone)
+            }
+        ) {
+            Text("ذخیره")
+        }
+    }
 }
