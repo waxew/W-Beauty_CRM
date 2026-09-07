@@ -1,13 +1,9 @@
 package com.wbeauty.crm.data.local.database
 
 /**
- * Room database entry point.
+ * کلاس اصلی دیتابیس محلی برنامه.
  *
- * This file is the foundation for local offline storage.
- * Entities and DAOs will be registered as modules are added.
+ * این بخش برای پیاده‌سازی Room Database در نسخه بعدی تکمیل می‌شود.
+ * طراحی بر اساس Offline First انجام شده است.
  */
-class AppDatabase {
-    companion object {
-        const val DATABASE_NAME = "w_beauty_crm.db"
-    }
-}
+class AppDatabase
