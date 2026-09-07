@@ -6,11 +6,11 @@ plugins {
 }
 
 android {
-    namespace = "com.wbeauty.crm"
+    namespace = "com.wcrm.engine"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.wbeauty.crm"
+        applicationId = "com.wcrm.engine"
         minSdk = 26
         targetSdk = 35
         versionCode = 1
