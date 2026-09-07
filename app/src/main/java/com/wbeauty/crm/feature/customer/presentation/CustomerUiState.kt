@@ -1,8 +1,8 @@
 package com.wbeauty.crm.feature.customer.presentation
 
-// وضعیت نمایشی صفحه مشتریان
-// این کلاس وضعیت‌های مورد نیاز UI مشتریان را نگهداری می‌کند.
+// وضعیت نمایش صفحه مشتریان
+// این کلاس وضعیت فعلی اطلاعات مشتری را نگهداری می‌کند.
 data class CustomerUiState(
     val isLoading: Boolean = false,
-    val message: String = ""
+    val message: String? = null
 )
