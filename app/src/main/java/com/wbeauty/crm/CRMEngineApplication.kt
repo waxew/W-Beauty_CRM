@@ -1,4 +1,4 @@
-package com.wbeauty.crm
+package com.wcrm.engine
 
 import android.app.Application
 import dagger.hilt.android.HiltAndroidApp
