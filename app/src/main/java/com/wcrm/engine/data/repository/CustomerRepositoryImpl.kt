@@ -1,0 +1,23 @@
+package com.wcrm.engine.data.repository
+
+import com.wcrm.engine.domain.customer.Customer
+import com.wcrm.engine.domain.customer.CustomerRepository
+
+/**
+ * Default data implementation for Customer repository.
+ *
+ * This layer will later connect to local database and remote data sources.
+ */
+class CustomerRepositoryImpl : CustomerRepository {
+
+    private val items = mutableListOf<Customer>()
+
+    override suspend fun getCustomers(): List<Customer> {
+        return items.toList()
+    }
+
+    override suspend fun saveCustomer(customer: Customer) {
+        items.removeIf { it.id == customer.id }
+        items.add(customer)
+    }
+}
