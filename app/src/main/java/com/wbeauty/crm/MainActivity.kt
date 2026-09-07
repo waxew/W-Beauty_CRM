@@ -1,10 +1,10 @@
-package com.wbeauty.crm
+package com.wcrm.engine
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import dagger.hilt.android.AndroidEntryPoint
-import com.wbeauty.crm.navigation.AppNavigation
+import com.wcrm.engine.navigation.AppNavigation
 import com.wbeauty.crm.ui.theme.WBeautyTheme
 
 @AndroidEntryPoint
