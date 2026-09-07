@@ -1,41 +1,45 @@
 # W-Beauty_CRM
 
-## Beauty CRM Android Platform
+## پلتفرم اندرویدی CRM سالن زیبایی
 
-W-Beauty_CRM is a professional Android CRM application designed for beauty salons and service-based businesses.
+پروژه W-Beauty_CRM یک نرم‌افزار حرفه‌ای مدیریت سالن زیبایی و کسب‌وکارهای خدماتی است.
 
-The project goal is to create an offline-first, scalable management system including customer management, reservations, invoices, financial tracking, and future SaaS capabilities.
-
----
-
-# Project Vision
-
-Create a complete salon management ecosystem:
-
-- Customer Relationship Management (CRM)
-- Appointment and reservation management
-- Service management
-- Invoice and payment management
-- Reports and analytics
-- Customer loyalty system
-- Advertisement integration
-- Future cloud/SaaS expansion
+هدف پروژه ساخت یک سیستم مدیریت کامل، آفلاین، قابل توسعه و آماده برای تبدیل شدن به نسخه SaaS در آینده است.
 
 ---
 
-# Current Development Branch
+# چشم‌انداز پروژه
+
+ایجاد یک اکوسیستم کامل مدیریت سالن:
+
+- مدیریت مشتریان (CRM)
+- مدیریت رزرو و نوبت‌دهی
+- مدیریت خدمات و کارکنان
+- فاکتور و پرداخت
+- گزارش‌های مدیریتی
+- باشگاه مشتریان
+- سیستم تبلیغات
+- توسعه ابری و SaaS در آینده
+
+---
+
+# روش توسعه
+
+توسعه پروژه به صورت مرحله‌ای و با Commitهای مستقل انجام می‌شود.
+
+Branch توسعه:
 
 ```text
 crm-development
 ```
 
-Development is performed feature-by-feature with independent commits.
+نسخه‌های پایدار پس از تایید به عنوان Baseline نگهداری خواهند شد.
 
 ---
 
-# Technology Stack
+# تکنولوژی‌ها
 
-## Android
+## بخش اندروید
 
 - Kotlin
 - Android Studio
@@ -44,195 +48,189 @@ Development is performed feature-by-feature with independent commits.
 - Coroutines
 - Flow
 
-## Architecture
+## معماری نرم‌افزار
 
 - Clean Architecture
-- MVVM Pattern
+- MVVM
 - Repository Pattern
 - Dependency Injection
 
-## Local Database
+## دیتابیس محلی
 
-Offline-first approach:
+طراحی پروژه بر اساس Offline First است:
 
 - Room Database
 - SQLite
-- Local data persistence
+- ذخیره‌سازی کامل اطلاعات روی دستگاه
 
-Future synchronization layer:
+در آینده:
 
-- Cloud Backend
-- Multi Salon SaaS Support
-
----
-
-# Main Modules
-
-## Customer Management
-
-Features:
-
-- Customer profile
-- Contact information
-- Visit history
-- Service history
-- Customer notes
-- Customer tags
+- اتصال به Cloud Backend
+- پشتیبانی چند سالن (Multi Tenant SaaS)
 
 ---
 
-## Reservation System
+# ماژول‌های اصلی
 
-Features:
+## مدیریت مشتریان
 
-- Appointment creation
-- Calendar management
-- Conflict prevention
-- Persian calendar support
-- Holiday and occasion support
+امکانات:
 
----
-
-## Service Management
-
-Features:
-
-- Service catalog
-- Pricing
-- Duration
-- Staff assignment
+- پرونده مشتری
+- اطلاعات تماس
+- تاریخچه مراجعه
+- سوابق خدمات
+- یادداشت‌ها
+- برچسب‌گذاری مشتریان
 
 ---
 
-## Invoice Management
+## سیستم رزرو
 
-Features:
+امکانات:
 
-- Invoice creation
-- Invoice items
-- Payments
-- Remaining balance
-- Financial history
-
----
-
-## Reports & Analytics
-
-Planned features:
-
-- Revenue reports
-- Popular services
-- Customer analysis
-- Business insights
+- ایجاد نوبت
+- مدیریت تقویم
+- جلوگیری از تداخل زمانی
+- تقویم شمسی
+- مناسبت‌ها و تعطیلات
 
 ---
 
-## Smart CRM
+## مدیریت خدمات
 
-Future features:
+امکانات:
 
-- Customer loyalty
-- Reminder system
-- Campaign management
-- Customer segmentation
-
----
-
-## Advertisement Layer
-
-Prepared architecture for:
-
-- Click based advertisements
-- Tapsell SDK integration
-- Ads management layer
+- تعریف خدمات
+- قیمت‌گذاری
+- مدت زمان خدمات
+- تخصیص کارکنان
 
 ---
 
-# Database Design
+## مدیریت فاکتور
 
-Core entities:
+امکانات:
 
-- Customer
-- Service
-- Staff
-- Reservation
-- Invoice
-- Invoice Item
-- Payment
-- Expense
-- Notification
-- Holiday
+- ایجاد فاکتور
+- آیتم‌های فاکتور
+- پرداخت‌ها
+- مانده حساب
+- سوابق مالی
 
 ---
 
-# Development Roadmap
+## گزارش‌ها و تحلیل‌ها
 
-## Phase 1
+شامل:
 
-Project foundation:
+- گزارش درآمد
+- خدمات محبوب
+- تحلیل رفتار مشتری
+- گزارش مدیریتی
 
-- Repository setup
-- Android Studio structure
-- Gradle configuration
-- Architecture foundation
+---
 
-## Phase 2
+## CRM هوشمند
 
-Database layer:
+امکانات آینده:
 
-- Room setup
-- Entities
+- باشگاه مشتریان
+- یادآوری خودکار
+- کمپین تبلیغاتی
+- دسته‌بندی مشتریان
+
+---
+
+## لایه تبلیغات
+
+معماری لازم برای:
+
+- تبلیغات کلیکی
+- اتصال SDK تپسل
+- مدیریت تبلیغات داخل برنامه
+
+---
+
+# طراحی دیتابیس
+
+موجودیت‌های اصلی:
+
+- مشتری
+- خدمات
+- کارکنان
+- رزرو
+- فاکتور
+- آیتم فاکتور
+- پرداخت
+- هزینه‌ها
+- اعلان‌ها
+- مناسبت‌ها
+
+---
+
+# نقشه توسعه
+
+## فاز ۱: زیرساخت پروژه
+
+- ساخت Repository
+- ساختار Android Studio
+- تنظیم Gradle
+- معماری پایه
+
+## فاز ۲: لایه دیتابیس
+
+- Room Database
+- Entityها
 - DAO
-- Repository implementation
+- Repository
 
-## Phase 3
+## فاز ۳: ماژول‌های اصلی
 
-CRM Modules:
+- مشتریان
+- رزرو
+- فاکتور
 
-- Customer module
-- Reservation module
-- Invoice module
+## فاز ۴: امکانات پیشرفته
 
-## Phase 4
+- باشگاه مشتریان
+- تحلیل‌ها
+- تبلیغات
+- بکاپ
 
-Advanced features:
+## فاز ۵: آماده‌سازی انتشار
 
-- Loyalty
-- Analytics
-- Ads
-- Backup
-
-## Phase 5
-
-Release preparation:
-
-- Testing
-- Optimization
-- Production build
+- تست
+- بهینه‌سازی
+- Build نهایی
 
 ---
 
-# Project Status
+# وضعیت فعلی پروژه
 
-Current completed sections:
+تکمیل شده:
 
-✅ Repository initialization  
-✅ Development branch setup  
-✅ Architecture documentation  
-✅ Core layer foundation  
-✅ Database foundation
+✅ ساخت Repository
 
-In progress:
+✅ ایجاد Branch توسعه
 
-- Room entities
-- DAO layer
-- Customer module
+✅ مستندات معماری
+
+✅ ساخت Core Layer
+
+✅ پایه دیتابیس
+
+در حال توسعه:
+
+- Entityهای Room
+- DAO
+- ماژول مشتریان
 
 ---
 
-# Version Strategy
+# استراتژی نسخه‌ها
 
-Versions will follow:
+نسخه‌ها:
 
 ```text
 v1.0.0
@@ -240,10 +238,10 @@ v1.1.0
 v2.0.0
 ```
 
-Stable releases will be preserved as immutable baselines.
+نسخه‌های تایید شده به صورت Immutable Baseline نگهداری می‌شوند.
 
 ---
 
-# License
+# مجوز
 
-Private project - W-Beauty_CRM
+پروژه خصوصی W-Beauty_CRM
