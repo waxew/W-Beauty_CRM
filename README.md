@@ -1,25 +1,23 @@
-# W-Beauty CRM
+# W-CRM
 
 ## معرفی پروژه
 
-W-Beauty CRM یک سیستم مدیریت ارتباط با مشتری (CRM) مبتنی بر Kotlin و Jetpack Compose است.
+W-CRM یک هسته CRM مستقل از نوع کسب‌وکار است که با Kotlin و Jetpack Compose توسعه داده می‌شود.
 
-هدف اصلی پروژه ساخت یک هسته CRM مستقل از نوع کسب‌وکار است تا بتوان از یک سورس، نسخه‌های مختلف CRM برای صنایع مختلف تولید کرد.
+هدف پروژه این است که از یک سورس بتوان نسخه‌های مختلف CRM برای صنایع مختلف تولید کرد.
 
-نمونه نسخه‌ها:
+نمونه‌ها:
 
 - CRM سالن زیبایی
 - CRM کلینیک
 - CRM شرکت فروش
-- CRM شرکت خدماتی
+- CRM خدماتی
 - CRM املاک
-- CRM سازمان‌های مختلف
+- CRM فروشگاهی
 
 ---
 
 # معماری اصلی
-
-ساختار کلان پروژه:
 
 ```
 CRM Core Engine
@@ -31,40 +29,27 @@ CRM Core Engine
         +---- Custom Field Engine
         |
         +---- Database Layer
+        |
+        +---- Future Extensions (Ads Platform)
 ```
 
-هسته برنامه نباید وابسته به یک صنعت خاص باشد.
+Core نباید شامل منطق اختصاصی یک صنعت باشد.
 
 ---
 
 # Business Profile System
 
-Business Profile مشخص می‌کند هر نسخه CRM برای چه کسب‌وکاری ساخته شده است.
-
-مسئولیت‌های Profile:
+Business Profile مشخص می‌کند هر نسخه CRM چه تنظیماتی دارد:
 
 - نام CRM
 - نام سازمان
-- لوگو و تصاویر
+- لوگو
 - رنگ سازمانی
+- تصاویر
 - متن‌ها
 - Package Configuration
 - Module های فعال
 - Attribute Schema های فعال
-
-ساختار:
-
-```
-business_profile/
-
-├── BusinessProfile.kt
-├── BusinessRegistry.kt
-├── CRMIndustryType.kt
-├── ModuleType.kt
-├── AttributeSchema.kt
-│
-└── profiles/
-```
 
 ---
 
@@ -72,24 +57,20 @@ business_profile/
 
 ## Module
 
-برای قابلیت‌هایی که منطق، فرآیند و Workflow دارند.
-
-مثال:
+برای قابلیت‌هایی که دارای منطق و Workflow هستند:
 
 - Customer
-- Lead
-- Pipeline
-- Appointment
-- Reservation
+- Sales
 - Invoice
+- Reservation
+- Appointment
 - Warranty
 - Repair
+- Delivery
 
 ## Attribute Schema
 
-برای اطلاعات متغیر و اختصاصی هر کسب‌وکار.
-
-مثال:
+برای اطلاعات متغیر کسب‌وکار:
 
 کلینیک:
 
@@ -107,23 +88,13 @@ business_profile/
 - Size
 - Serial Number
 
-این اطلاعات نباید به صورت Field ثابت داخل Core Entity قرار بگیرند.
+این موارد نباید Field ثابت Core Entity باشند.
 
 ---
 
-# CRM Core Rules
+# قوانین Core
 
-نمونه اشتباه:
-
-```
-Customer {
- skinType
- bloodType
- imei
-}
-```
-
-نمونه صحیح:
+صحیح:
 
 ```
 Customer Core
@@ -133,42 +104,21 @@ Custom Field Engine
 Attribute Schema
 ```
 
----
-
-# تکنولوژی‌ها
-
-- Kotlin
-- Jetpack Compose
-- Material 3
-- MVVM
-- Clean Architecture
-- Hilt Dependency Injection
-- Room Database
-- Kotlin Coroutines / Flow
-- Navigation Compose
-- KSP
-
----
-
-# لایه‌های پروژه
+غلط:
 
 ```
-UI
- |
-ViewModel
- |
-UseCase
- |
-Repository
- |
-Database
+Customer {
+ skinType
+ bloodType
+ imei
+}
 ```
 
 ---
 
-# Business Profile های CRM
+# Business Profile های فعلی
 
-نمونه Profile ها:
+CRM:
 
 ```
 beauty_center_001
@@ -178,9 +128,7 @@ realestate_001
 service_company_001
 ```
 
----
-
-# Business Profile های فروشگاهی
+Store:
 
 ```
 mobile_store_001
@@ -197,29 +145,24 @@ omnichannel_store_001
 
 ---
 
-# اضافه کردن کسب‌وکار جدید
+# ساخت CRM جدید
 
-برای ساخت CRM جدید:
-
-1. یک Business Profile جدید ایجاد کنید.
-2. Industry Type مشخص کنید.
-3. Module های مورد نیاز را فعال کنید.
-4. Attribute Schema های اختصاصی را تعریف کنید.
-5. Core را تغییر ندهید.
+1. ایجاد Business Profile جدید
+2. تعیین Industry Type
+3. فعال کردن Moduleهای مورد نیاز
+4. تعریف Attribute Schema
+5. عدم تغییر Core
 
 ---
 
 # وضعیت توسعه
-
-وضعیت فعلی:
-
-Active Development
 
 تمرکز فعلی:
 
 - تکمیل Business Profile Runtime
 - تکمیل Module Engine
 - تکمیل Custom Field Engine
-- اتصال Core CRM به Profile های مختلف
+- Refactor Core Entityها
+- Build نهایی
 
-تمام توسعه‌ها باید معماری Core مستقل از Industry را حفظ کنند.
+تمام توسعه‌ها باید معماری مستقل از Industry را حفظ کنند.
