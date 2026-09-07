@@ -13,6 +13,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 
 @Composable
 fun CustomerAddScreen(
+    onSaved: () -> Unit,
     viewModel: CustomerViewModel = hiltViewModel()
 ) {
     var name by remember { mutableStateOf("") }
@@ -34,6 +35,7 @@ fun CustomerAddScreen(
         Button(
             onClick = {
                 viewModel.addCustomer(name, phone)
+                onSaved()
             }
         ) {
             Text("ذخیره")
