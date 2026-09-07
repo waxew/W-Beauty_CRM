@@ -8,7 +8,9 @@ import androidx.navigation.compose.rememberNavController
 private const val HOME_ROUTE = "home"
 
 @Composable
-fun AppNavigation() {
+fun AppNavigation(
+    routes: List<RouteDefinition> = emptyList()
+) {
     val navController = rememberNavController()
 
     NavHost(
@@ -16,7 +18,13 @@ fun AppNavigation() {
         startDestination = HOME_ROUTE
     ) {
         composable(HOME_ROUTE) {
-            // Runtime driven feature destinations will be registered here.
+            // Core home container.
+        }
+
+        routes.forEach { route ->
+            composable(route.route) {
+                // Feature destination is provided by runtime feature module.
+            }
         }
     }
 }
