@@ -8,7 +8,7 @@ import com.wbeauty.crm.data.local.entity.CustomerEntity
 @Database(
     entities = [CustomerEntity::class],
     version = 1,
-    exportSchema = true
+    exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
     abstract fun customerDao(): CustomerDao
