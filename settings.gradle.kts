@@ -6,7 +6,7 @@ pluginManagement {
     }
 }
 
- dependencyResolutionManagement {
+dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
         google()
@@ -14,5 +14,6 @@ pluginManagement {
     }
 }
 
-rootProject.name = "W-Beauty_CRM"
+rootProject.name = "W-CRM"
+
 include(":app")
