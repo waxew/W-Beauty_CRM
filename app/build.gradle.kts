@@ -29,6 +29,7 @@ android {
 dependencies {
     implementation(project(":core"))
     implementation(project(":business_profile"))
+    implementation(project(":runtime"))
 
     implementation("androidx.core:core-ktx:1.15.0")
     implementation("androidx.activity:activity-compose:1.9.3")
