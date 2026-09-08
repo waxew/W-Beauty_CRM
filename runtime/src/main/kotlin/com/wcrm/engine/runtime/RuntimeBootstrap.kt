@@ -1,11 +1,14 @@
 package com.wcrm.engine.runtime
 
-object RuntimeBootstrap {
+class RuntimeBootstrap(
+    private val context: RuntimeContext,
+    private val registry: RuntimeRegistry
+) {
 
     fun initialize(profile: String): RuntimeContext {
-        return RuntimeContext(
+        return context.copy(
             activeProfile = profile,
-            enabledFeatures = emptySet()
+            enabledFeatures = registry.features()
         )
     }
 }
