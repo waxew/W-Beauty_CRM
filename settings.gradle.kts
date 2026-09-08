@@ -18,3 +18,4 @@ rootProject.name = "W-CRM"
 
 include(":app")
 include(":business_profile")
+include(":core")
