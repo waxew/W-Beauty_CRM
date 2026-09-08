@@ -1,4 +1,4 @@
-package com.wcrm.engine.runtime
+package com.wcrm.engine.runtime.shared
 
 /**
  * Runtime state container shared by application services.

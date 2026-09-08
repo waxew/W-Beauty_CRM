@@ -1,4 +1,4 @@
-package com.wcrm.engine.runtime
+package com.wcrm.engine.runtime.shared
 
 class RuntimeBootstrap(
     private val context: RuntimeContext,
@@ -8,7 +8,7 @@ class RuntimeBootstrap(
     fun initialize(profile: String): RuntimeContext {
         return context.copy(
             activeProfile = profile,
-            enabledFeatures = registry.features()
+            enabledFeatures = registry.modules()
         )
     }
 }

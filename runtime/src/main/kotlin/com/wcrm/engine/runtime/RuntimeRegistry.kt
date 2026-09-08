@@ -1,4 +1,4 @@
-package com.wcrm.engine.runtime
+package com.wcrm.engine.runtime.shared
 
 class RuntimeRegistry {
     private val modules = mutableSetOf<String>()
