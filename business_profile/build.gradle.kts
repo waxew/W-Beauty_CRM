@@ -1,10 +1,17 @@
 plugins {
-    id("org.jetbrains.kotlin.jvm")
+    id("com.android.library")
+    id("org.jetbrains.kotlin.android")
 }
 
-kotlin {
-    jvmToolchain(17)
-}
+android {
+    namespace = "com.wcrm.engine.businessprofile"
+    compileSdk = 35
 
-dependencies {
+    defaultConfig {
+        minSdk = 26
+    }
+
+    kotlinOptions {
+        jvmTarget = "17"
+    }
 }
