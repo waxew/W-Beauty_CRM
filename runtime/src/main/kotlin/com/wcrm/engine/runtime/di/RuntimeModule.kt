@@ -1,8 +1,8 @@
-package com.wcrm.engine.runtime.shared.di
+package com.wcrm.engine.runtime.di
 
-import com.wcrm.engine.runtime.shared.RuntimeBootstrap
-import com.wcrm.engine.runtime.shared.RuntimeContext
-import com.wcrm.engine.runtime.shared.RuntimeRegistry
+import com.wcrm.engine.runtime.RuntimeBootstrap
+import com.wcrm.engine.runtime.RuntimeContext
+import com.wcrm.engine.runtime.RuntimeRegistry
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -15,7 +15,7 @@ object RuntimeModule {
 
     @Provides
     @Singleton
-    fun provideRuntimeContext(activeProfile = ""): RuntimeContext = RuntimeContext()
+    fun provideRuntimeContext(): RuntimeContext = RuntimeContext()
 
     @Provides
     @Singleton
