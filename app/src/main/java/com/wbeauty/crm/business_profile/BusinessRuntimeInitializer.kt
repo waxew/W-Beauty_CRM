@@ -22,7 +22,7 @@ object BusinessRuntimeInitializer {
         BusinessRegistry.initialize(profile)
 
         ModuleRegistry.initialize(
-            profile.enabledModules
+            profile.enabledModules.toSet()
         )
     }
 }
