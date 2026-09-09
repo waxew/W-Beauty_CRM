@@ -6,7 +6,14 @@ package com.wcrm.engine.businessprofile
  */
 data class BusinessProfile(
     val id: String,
-    val name: String,
+    val name: String = id,
     val enabledModules: List<String> = emptyList(),
+    val enabledFeatures: List<String> = emptyList(),
     val schemaIds: List<String> = emptyList()
-)
+) {
+    /**
+     * Compatibility view used while migrating older profile definitions.
+     */
+    val modules: List<String>
+        get() = if (enabledModules.isNotEmpty()) enabledModules else enabledFeatures
+}
