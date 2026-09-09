@@ -1,0 +1,1 @@
+{"_comment_fa":"Schema کتاب","id":"book_store.product","fields":[{"key":"title","label":"عنوان کتاب","type":"TEXT","required":true},{"key":"author","label":"نویسنده","type":"TEXT"},{"key":"isbn","label":"ISBN","type":"TEXT"},{"key":"publisher","label":"ناشر","type":"TEXT"}]}

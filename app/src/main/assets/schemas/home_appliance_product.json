@@ -1,0 +1,1 @@
+{"_comment_fa":"Schema لوازم خانگی","id":"home_appliance.product","fields":[{"key":"brand","label":"برند","type":"TEXT"},{"key":"model","label":"مدل","type":"TEXT"},{"key":"serial","label":"شماره سریال","type":"TEXT","required":true},{"key":"warranty_months","label":"مدت گارانتی","type":"NUMBER"}]}

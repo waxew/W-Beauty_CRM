@@ -1,0 +1,25 @@
+{
+  "_comment_fa": "پروفایل جواهر و طلا.",
+  "id": "jewelry_store",
+  "name": "فروشگاه طلا و جواهر",
+  "enabled": false,
+  "enabledModules": ["CRM", "SALES", "INVENTORY"],
+  "schemaIds": ["jewelry_store.product"],
+  "ui": {
+    "themeId": "jewelry_luxury",
+    "iconSetId": "jewelry_store",
+    "illustrationSetId": "jewelry_store",
+    "homeTitle": "مدیریت طلا و جواهر",
+    "homeSubtitle": "فروش، وزن، عیار و موجودی",
+    "dashboardItems": [
+      {"id":"customers","title":"مشتریان","route":"customers"},
+      {"id":"sales","title":"فروش","route":"sales"},
+      {"id":"inventory","title":"موجودی طلا","route":"inventory"}
+    ],
+    "productFields": [
+      {"key":"title","label":"عنوان کالا"}, {"key":"weight","label":"وزن","type":"NUMBER","required":true},
+      {"key":"karat","label":"عیار","type":"NUMBER"}, {"key":"stone","label":"سنگ/نگین"}
+    ],
+    "terminology": {"product":"قطعه","inventory":"موجودی طلا"}
+  }
+}

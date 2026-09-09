@@ -1,0 +1,28 @@
+{
+  "_comment_fa": "پروفایل فروشگاه موبایل؛ تنها پروفایل فعال نمونه فعلی است.",
+  "id": "mobile_store",
+  "name": "فروشگاه موبایل",
+  "enabled": true,
+  "enabledModules": ["CRM", "SALES", "INVENTORY", "WARRANTY", "REPAIR"],
+  "schemaIds": ["mobile_store.product"],
+  "ui": {
+    "themeId": "mobile_tech",
+    "iconSetId": "mobile_store",
+    "illustrationSetId": "mobile_store",
+    "homeTitle": "مدیریت فروشگاه موبایل",
+    "homeSubtitle": "فروش، موجودی، IMEI، گارانتی و تعمیرات",
+    "dashboardItems": [
+      {"id":"customers","title":"مشتریان","route":"customers"},
+      {"id":"sales","title":"فروش","route":"sales"},
+      {"id":"inventory","title":"موجودی دستگاه‌ها","route":"inventory"},
+      {"id":"warranty","title":"گارانتی","route":"warranty"},
+      {"id":"repair","title":"تعمیرات","route":"repair"}
+    ],
+    "productFields": [
+      {"key":"brand","label":"برند"}, {"key":"model","label":"مدل"},
+      {"key":"imei","label":"IMEI","type":"SERIAL","required":true},
+      {"key":"storage","label":"حافظه"}, {"key":"color","label":"رنگ"}
+    ],
+    "terminology": {"product":"دستگاه","inventory":"موجودی دستگاه"}
+  }
+}

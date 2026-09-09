@@ -1,0 +1,26 @@
+{
+  "_comment_fa": "پروفایل فروشگاه مواد غذایی.",
+  "id": "grocery",
+  "name": "فروشگاه مواد غذایی",
+  "enabled": false,
+  "enabledModules": ["CRM", "SALES", "INVENTORY", "MARKETING"],
+  "schemaIds": ["grocery.product"],
+  "ui": {
+    "themeId": "grocery_fresh",
+    "iconSetId": "grocery",
+    "illustrationSetId": "grocery",
+    "homeTitle": "مدیریت فروشگاه مواد غذایی",
+    "homeSubtitle": "فروش، بارکد، تاریخ انقضا و موجودی",
+    "dashboardItems": [
+      {"id":"customers","title":"مشتریان","route":"customers"},
+      {"id":"sales","title":"فروش","route":"sales"},
+      {"id":"inventory","title":"موجودی","route":"inventory"},
+      {"id":"marketing","title":"بازاریابی","route":"marketing"}
+    ],
+    "productFields": [
+      {"key":"title","label":"نام کالا","required":true}, {"key":"barcode","label":"بارکد","type":"BARCODE"},
+      {"key":"expiry","label":"تاریخ انقضا","type":"DATE"}, {"key":"batch","label":"بچ/سری تولید"}
+    ],
+    "terminology": {"product":"کالا","inventory":"موجودی فروشگاه"}
+  }
+}

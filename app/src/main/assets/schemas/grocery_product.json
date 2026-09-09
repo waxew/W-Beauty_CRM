@@ -1,0 +1,1 @@
+{"_comment_fa":"Schema مواد غذایی","id":"grocery.product","fields":[{"key":"title","label":"نام کالا","type":"TEXT","required":true},{"key":"barcode","label":"بارکد","type":"TEXT"},{"key":"expiry","label":"تاریخ انقضا","type":"DATE"},{"key":"batch","label":"بچ/سری تولید","type":"TEXT"}]}

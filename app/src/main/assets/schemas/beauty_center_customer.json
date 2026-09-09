@@ -1,0 +1,1 @@
+{"_comment_fa":"Schema اطلاعات مراجعه‌کننده مرکز زیبایی","id":"beauty_center.customer","fields":[{"key":"skin_type","label":"نوع پوست","type":"TEXT"},{"key":"hair_history","label":"سابقه مو","type":"TEXT"},{"key":"allergy_notes","label":"حساسیت‌ها","type":"TEXT"}]}

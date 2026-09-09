@@ -1,0 +1,26 @@
+{
+  "_comment_fa": "پروفایل قطعات خودرو.",
+  "id": "auto_parts",
+  "name": "فروشگاه قطعات خودرو",
+  "enabled": false,
+  "enabledModules": ["CRM", "SALES", "INVENTORY", "REPAIR"],
+  "schemaIds": ["auto_parts.product"],
+  "ui": {
+    "themeId": "auto_industrial",
+    "iconSetId": "auto_parts",
+    "illustrationSetId": "auto_parts",
+    "homeTitle": "مدیریت قطعات خودرو",
+    "homeSubtitle": "قطعات، خودروهای سازگار، فروش و موجودی",
+    "dashboardItems": [
+      {"id":"customers","title":"مشتریان","route":"customers"},
+      {"id":"sales","title":"فروش","route":"sales"},
+      {"id":"inventory","title":"موجودی قطعات","route":"inventory"},
+      {"id":"repair","title":"خدمات/تعمیر","route":"repair"}
+    ],
+    "productFields": [
+      {"key":"part_number","label":"شماره فنی","type":"SERIAL","required":true},
+      {"key":"brand","label":"برند"}, {"key":"vehicle","label":"خودروی سازگار"}, {"key":"model_year","label":"سال مدل"}
+    ],
+    "terminology": {"product":"قطعه","inventory":"موجودی قطعات"}
+  }
+}

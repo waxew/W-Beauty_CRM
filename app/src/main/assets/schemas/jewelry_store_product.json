@@ -1,0 +1,1 @@
+{"_comment_fa":"Schema محصول طلا و جواهر","id":"jewelry_store.product","fields":[{"key":"weight","label":"وزن","type":"NUMBER","required":true},{"key":"karat","label":"عیار","type":"NUMBER"},{"key":"stone","label":"سنگ/نگین","type":"TEXT"}]}

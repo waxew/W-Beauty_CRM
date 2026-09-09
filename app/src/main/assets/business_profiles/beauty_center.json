@@ -1,0 +1,24 @@
+{
+  "_comment_fa": "پروفایل مرکز زیبایی؛ غیرفعال تا زمانی که برنامه‌نویس enabled را true کند.",
+  "id": "beauty_center",
+  "name": "مرکز زیبایی",
+  "enabled": false,
+  "enabledModules": ["CRM", "SALES", "MARKETING"],
+  "schemaIds": ["beauty_center.customer"],
+  "ui": {
+    "themeId": "beauty_soft",
+    "iconSetId": "beauty_center",
+    "illustrationSetId": "beauty_center",
+    "homeTitle": "مدیریت مرکز زیبایی",
+    "homeSubtitle": "مشتریان، خدمات، فروش و بازاریابی",
+    "dashboardItems": [
+      {"id":"customers","title":"مشتریان","route":"customers"},
+      {"id":"services","title":"خدمات","route":"services"},
+      {"id":"sales","title":"فروش","route":"sales"},
+      {"id":"marketing","title":"بازاریابی","route":"marketing"}
+    ],
+    "productFields": [{"key":"service_name","label":"نام خدمت"},{"key":"price","label":"هزینه","type":"MONEY"}],
+    "customerFields": [{"key":"skin_type","label":"نوع پوست"},{"key":"hair_history","label":"سابقه مو"}],
+    "terminology": {"product":"خدمت","customer":"مراجعه‌کننده"}
+  }
+}

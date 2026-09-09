@@ -1,0 +1,1 @@
+{"_comment_fa":"Schema فروش چندکاناله","id":"omnichannel.product","fields":[{"key":"sku","label":"SKU","type":"TEXT","required":true},{"key":"title","label":"نام کالا","type":"TEXT"},{"key":"channel","label":"کانال فروش","type":"TEXT"},{"key":"barcode","label":"بارکد","type":"TEXT"}]}

@@ -1,0 +1,1 @@
+{"_comment_fa":"Schema پوشاک و بوتیک","id":"boutique.product","fields":[{"key":"title","label":"نام محصول","type":"TEXT","required":true},{"key":"size","label":"سایز","type":"TEXT"},{"key":"color","label":"رنگ","type":"TEXT"},{"key":"material","label":"جنس","type":"TEXT"},{"key":"season","label":"فصل","type":"TEXT"}]}

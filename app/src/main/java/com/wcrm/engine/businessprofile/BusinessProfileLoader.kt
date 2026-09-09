@@ -1,23 +1,34 @@
 package com.wcrm.engine.businessprofile
 
+import android.content.Context
+import com.wcrm.engine.customfield.SchemaLoader
 import com.wcrm.engine.runtime.BusinessRuntime
 
 /**
- * تبدیل Business Profile فعال به Runtime قابل مصرف توسط Core و UI.
+ * تبدیل Profile فعال به Runtime قابل مصرف توسط Core و UI.
  *
- * هیچ اطلاعات صنفی در این کلاس Hardcode نمی‌شود؛ تمام تنظیمات از خود Profile می‌آید.
+ * Profile و Schema از فایل‌های مستقل assets بارگذاری می‌شوند؛ بنابراین این کلاس
+ * هیچ نام صنعت یا Schema مشخصی را Hardcode نمی‌کند.
  */
 class BusinessProfileLoader {
-    fun load(profile: BusinessProfile): BusinessRuntime {
+    fun load(
+        profile: BusinessProfile,
+        schemaLoader: SchemaLoader? = null
+    ): BusinessRuntime {
+        val schemas = schemaLoader?.load(profile.schemaIds).orEmpty()
         return BusinessRuntime(
             businessId = profile.id,
             enabledModules = profile.modules,
-            customSchemas = emptyList(),
+            customSchemas = schemas.flatMap { it.fields },
             schemaIds = profile.schemaIds,
             uiConfig = profile.ui
         )
     }
 
-    /** بارگذاری مستقیم تنها Profile فعال تعریف‌شده توسط برنامه‌نویس. */
-    fun loadActive(): BusinessRuntime = load(BusinessProfileCatalog.requireActiveProfile())
+    /** بارگذاری تنها Profile فعال نسخه به همراه تمام Schemaهای آن. */
+    fun loadActive(context: Context): BusinessRuntime {
+        val registry = ProfileRegistry.fromAssets(context)
+        val active = registry.requireSingleEnabled()
+        return load(active, SchemaLoader(context))
+    }
 }

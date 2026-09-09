@@ -1,0 +1,1 @@
+{"_comment_fa":"Schema قطعه خودرو","id":"auto_parts.product","fields":[{"key":"part_number","label":"شماره فنی","type":"TEXT","required":true},{"key":"brand","label":"برند","type":"TEXT"},{"key":"vehicle","label":"خودروی سازگار","type":"TEXT"},{"key":"model_year","label":"سال مدل","type":"NUMBER"}]}

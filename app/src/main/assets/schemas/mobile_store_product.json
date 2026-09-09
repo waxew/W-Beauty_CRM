@@ -1,0 +1,1 @@
+{"_comment_fa":"Schema محصول موبایل","id":"mobile_store.product","fields":[{"key":"brand","label":"برند","type":"TEXT"},{"key":"model","label":"مدل","type":"TEXT"},{"key":"imei","label":"IMEI","type":"TEXT","required":true},{"key":"storage","label":"حافظه","type":"TEXT"},{"key":"color","label":"رنگ","type":"TEXT"}]}

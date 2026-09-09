@@ -1,0 +1,26 @@
+{
+  "_comment_fa": "پروفایل بوتیک و پوشاک.",
+  "id": "boutique",
+  "name": "بوتیک و پوشاک",
+  "enabled": false,
+  "enabledModules": ["CRM", "SALES", "INVENTORY", "MARKETING"],
+  "schemaIds": ["boutique.product"],
+  "ui": {
+    "themeId": "boutique_fashion",
+    "iconSetId": "boutique",
+    "illustrationSetId": "boutique",
+    "homeTitle": "مدیریت بوتیک",
+    "homeSubtitle": "محصولات، سایزها، رنگ‌ها، فروش و موجودی",
+    "dashboardItems": [
+      {"id":"customers","title":"مشتریان","route":"customers"},
+      {"id":"sales","title":"فروش","route":"sales"},
+      {"id":"inventory","title":"موجودی پوشاک","route":"inventory"},
+      {"id":"marketing","title":"بازاریابی","route":"marketing"}
+    ],
+    "productFields": [
+      {"key":"title","label":"نام محصول","required":true}, {"key":"size","label":"سایز"},
+      {"key":"color","label":"رنگ"}, {"key":"material","label":"جنس"}, {"key":"season","label":"فصل"}
+    ],
+    "terminology": {"product":"پوشاک","inventory":"موجودی پوشاک"}
+  }
+}

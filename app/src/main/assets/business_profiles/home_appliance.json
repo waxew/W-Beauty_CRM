@@ -1,0 +1,27 @@
+{
+  "_comment_fa": "پروفایل لوازم خانگی.",
+  "id": "home_appliance",
+  "name": "فروشگاه لوازم خانگی",
+  "enabled": false,
+  "enabledModules": ["CRM", "SALES", "INVENTORY", "WARRANTY", "DELIVERY"],
+  "schemaIds": ["home_appliance.product"],
+  "ui": {
+    "themeId": "home_appliance_clean",
+    "iconSetId": "home_appliance",
+    "illustrationSetId": "home_appliance",
+    "homeTitle": "مدیریت لوازم خانگی",
+    "homeSubtitle": "فروش، سریال، گارانتی و تحویل",
+    "dashboardItems": [
+      {"id":"customers","title":"مشتریان","route":"customers"},
+      {"id":"sales","title":"فروش","route":"sales"},
+      {"id":"inventory","title":"موجودی کالا","route":"inventory"},
+      {"id":"warranty","title":"گارانتی","route":"warranty"},
+      {"id":"delivery","title":"تحویل","route":"delivery"}
+    ],
+    "productFields": [
+      {"key":"brand","label":"برند"}, {"key":"model","label":"مدل"},
+      {"key":"serial","label":"شماره سریال","type":"SERIAL","required":true}, {"key":"warranty_months","label":"مدت گارانتی","type":"NUMBER"}
+    ],
+    "terminology": {"product":"کالا","inventory":"موجودی لوازم"}
+  }
+}

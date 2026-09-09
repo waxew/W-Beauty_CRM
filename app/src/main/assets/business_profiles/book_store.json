@@ -1,0 +1,25 @@
+{
+  "_comment_fa": "پروفایل کتاب‌فروشی.",
+  "id": "book_store",
+  "name": "کتاب‌فروشی",
+  "enabled": false,
+  "enabledModules": ["CRM", "SALES", "INVENTORY"],
+  "schemaIds": ["book_store.product"],
+  "ui": {
+    "themeId": "book_calm",
+    "iconSetId": "book_store",
+    "illustrationSetId": "book_store",
+    "homeTitle": "مدیریت کتاب‌فروشی",
+    "homeSubtitle": "کتاب‌ها، نویسندگان، فروش و موجودی",
+    "dashboardItems": [
+      {"id":"customers","title":"مشتریان","route":"customers"},
+      {"id":"sales","title":"فروش","route":"sales"},
+      {"id":"inventory","title":"موجودی کتاب","route":"inventory"}
+    ],
+    "productFields": [
+      {"key":"title","label":"عنوان کتاب","required":true}, {"key":"author","label":"نویسنده"},
+      {"key":"isbn","label":"ISBN","type":"BARCODE"}, {"key":"publisher","label":"ناشر"}
+    ],
+    "terminology": {"product":"کتاب","inventory":"موجودی کتاب"}
+  }
+}

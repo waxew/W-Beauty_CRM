@@ -1,0 +1,1 @@
+{"_comment_fa":"Schema پت‌شاپ","id":"pet_store.product","fields":[{"key":"title","label":"نام محصول","type":"TEXT","required":true},{"key":"pet_type","label":"نوع حیوان","type":"TEXT"},{"key":"age_group","label":"گروه سنی","type":"TEXT"},{"key":"expiry","label":"تاریخ انقضا","type":"DATE"}]}

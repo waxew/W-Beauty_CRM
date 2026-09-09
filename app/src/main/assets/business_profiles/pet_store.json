@@ -1,0 +1,25 @@
+{
+  "_comment_fa": "پروفایل پت‌شاپ.",
+  "id": "pet_store",
+  "name": "پت‌شاپ",
+  "enabled": false,
+  "enabledModules": ["CRM", "SALES", "INVENTORY"],
+  "schemaIds": ["pet_store.product"],
+  "ui": {
+    "themeId": "pet_friendly",
+    "iconSetId": "pet_store",
+    "illustrationSetId": "pet_store",
+    "homeTitle": "مدیریت پت‌شاپ",
+    "homeSubtitle": "محصولات حیوانات، فروش و موجودی",
+    "dashboardItems": [
+      {"id":"customers","title":"مشتریان","route":"customers"},
+      {"id":"sales","title":"فروش","route":"sales"},
+      {"id":"inventory","title":"موجودی","route":"inventory"}
+    ],
+    "productFields": [
+      {"key":"title","label":"نام محصول","required":true}, {"key":"pet_type","label":"نوع حیوان"},
+      {"key":"age_group","label":"گروه سنی"}, {"key":"expiry","label":"تاریخ انقضا","type":"DATE"}
+    ],
+    "terminology": {"product":"محصول پت","inventory":"موجودی پت‌شاپ"}
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "_comment_fa": "پروفایل فروش چندکاناله.",
+  "id": "omnichannel",
+  "name": "فروش چندکاناله",
+  "enabled": false,
+  "enabledModules": ["CRM", "SALES", "INVENTORY", "MARKETING", "DELIVERY"],
+  "schemaIds": ["omnichannel.product"],
+  "ui": {
+    "themeId": "omnichannel_modern",
+    "iconSetId": "omnichannel",
+    "illustrationSetId": "omnichannel",
+    "homeTitle": "مدیریت فروش چندکاناله",
+    "homeSubtitle": "فروش حضوری و آنلاین، موجودی و ارسال",
+    "dashboardItems": [
+      {"id":"customers","title":"مشتریان","route":"customers"},
+      {"id":"sales","title":"فروش","route":"sales"},
+      {"id":"inventory","title":"موجودی","route":"inventory"},
+      {"id":"marketing","title":"بازاریابی","route":"marketing"},
+      {"id":"delivery","title":"ارسال و تحویل","route":"delivery"}
+    ],
+    "productFields": [
+      {"key":"sku","label":"SKU","type":"SERIAL","required":true}, {"key":"title","label":"نام کالا"},
+      {"key":"channel","label":"کانال فروش"}, {"key":"barcode","label":"بارکد","type":"BARCODE"}
+    ],
+    "terminology": {"product":"کالا","inventory":"موجودی یکپارچه"}
+  }
+}

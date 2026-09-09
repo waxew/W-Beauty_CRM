@@ -13,7 +13,9 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
@@ -23,33 +25,33 @@ import androidx.navigation.compose.rememberNavController
 import com.wbeauty.crm.feature.customer.CustomerAddScreen
 import com.wbeauty.crm.feature.customer.CustomerRoutes
 import com.wbeauty.crm.feature.customer.CustomerScreen
-import com.wcrm.engine.businessprofile.BusinessProfileCatalog
 import com.wcrm.engine.businessprofile.BusinessUiConfig
 import com.wcrm.engine.businessprofile.DashboardItemConfig
+import com.wcrm.engine.businessprofile.ProfileRegistry
 
 private const val HOME_ROUTE = "home"
 
 /**
  * ناوبری اصلی برنامه CRM.
  *
- * UI از Business Profile فعال خوانده می‌شود. در نتیجه با تغییر enabled بین ده Profile،
- * عنوان صفحه خانه، کارت‌های داشبورد، واژگان و مقصدهای نمایشی نیز تغییر می‌کنند.
+ * Profile فعال دیگر از یک لیست Hardcode خوانده نمی‌شود. Registry در زمان اجرا
+ * تمام فایل‌های assets/business_profiles را کشف می‌کند و تنها Profile فعال را
+ * در اختیار UI قرار می‌دهد.
  */
 @Composable
 fun AppNavigation(
     routes: List<RouteDefinition> = emptyList()
 ) {
+    val context = LocalContext.current.applicationContext
     val navController = rememberNavController()
-    val activeProfile = BusinessProfileCatalog.requireActiveProfile()
+    val profileRegistry = remember(context) { ProfileRegistry.fromAssets(context) }
+    val activeProfile = remember(profileRegistry) { profileRegistry.requireSingleEnabled() }
     val uiConfig = requireNotNull(activeProfile.ui) {
         "Business Profile فعال باید uiConfig داشته باشد: ${activeProfile.id}"
     }
 
     CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
-        NavHost(
-            navController = navController,
-            startDestination = HOME_ROUTE
-        ) {
+        NavHost(navController = navController, startDestination = HOME_ROUTE) {
             composable(HOME_ROUTE) {
                 HomeScreen(
                     uiConfig = uiConfig,
@@ -63,22 +65,16 @@ fun AppNavigation(
             }
 
             composable(CustomerRoutes.LIST) {
-                CustomerScreen(
-                    onAddCustomer = {
-                        navController.navigate(CustomerRoutes.ADD)
-                    }
-                )
+                CustomerScreen(onAddCustomer = { navController.navigate(CustomerRoutes.ADD) })
             }
 
             composable(CustomerRoutes.ADD) {
                 CustomerAddScreen(
-                    onSaved = {
-                        navController.popBackStack(CustomerRoutes.LIST, inclusive = false)
-                    }
+                    onSaved = { navController.popBackStack(CustomerRoutes.LIST, inclusive = false) }
                 )
             }
 
-            // تمام Routeهای داشبورد Profile فعال ثبت می‌شوند تا UI با صنف انتخابی هماهنگ باشد.
+            // Routeهای داشبورد بدون شناخت نوع کسب‌وکار از Profile فعال ساخته می‌شوند.
             uiConfig.dashboardItems
                 .map { it.route }
                 .distinct()
@@ -92,7 +88,6 @@ fun AppNavigation(
                     }
                 }
 
-            // Routeهای Runtime خارجی نیز حفظ می‌شوند و با Routeهای Profile تداخل نمی‌کنند.
             routes
                 .filter { route ->
                     route.route != HOME_ROUTE &&
@@ -101,54 +96,32 @@ fun AppNavigation(
                         uiConfig.dashboardItems.none { it.route == route.route }
                 }
                 .forEach { route ->
-                    composable(route.route) {
-                        RuntimeFeatureScreen(route = route)
-                    }
+                    composable(route.route) { RuntimeFeatureScreen(route) }
                 }
         }
     }
 }
 
-/**
- * داشبورد Profile-aware.
- * این Screen برای هر ده کسب‌وکار مشترک است، اما محتوا و کارت‌ها از Profile فعال می‌آیند.
- */
+/** داشبورد عمومی که تمام محتوا و ترتیب کارت‌ها را از Profile فعال می‌گیرد. */
 @Composable
 private fun HomeScreen(
     uiConfig: BusinessUiConfig,
     onDashboardItemClick: (DashboardItemConfig) -> Unit
 ) {
-    Surface(
-        modifier = Modifier.fillMaxSize(),
-        color = MaterialTheme.colorScheme.background
-    ) {
+    Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(20.dp),
+            modifier = Modifier.fillMaxSize().padding(20.dp),
             verticalArrangement = Arrangement.Top
         ) {
-            Text(
-                text = uiConfig.homeTitle,
-                style = MaterialTheme.typography.headlineMedium
-            )
-
+            Text(uiConfig.homeTitle, style = MaterialTheme.typography.headlineMedium)
             Spacer(modifier = Modifier.height(8.dp))
-
-            Text(
-                text = uiConfig.homeSubtitle,
-                style = MaterialTheme.typography.bodyLarge
-            )
-
+            Text(uiConfig.homeSubtitle, style = MaterialTheme.typography.bodyLarge)
             Spacer(modifier = Modifier.height(24.dp))
-
             uiConfig.dashboardItems.forEach { item ->
                 Button(
                     onClick = { onDashboardItemClick(item) },
                     modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text(item.title)
-                }
+                ) { Text(item.title) }
                 Spacer(modifier = Modifier.height(10.dp))
             }
         }
@@ -156,56 +129,28 @@ private fun HomeScreen(
 }
 
 /**
- * صفحه موقتِ Profile-aware برای ماژول‌هایی که Backend اختصاصی آن‌ها هنوز تکمیل نشده است.
- * این صفحه عمداً اطلاعات Profile را نمایش می‌دهد تا هیچ Route به صفحه سفید ختم نشود؛
- * در مراحل بعد با Screen/ViewModel/UseCase/Repository واقعی هر ماژول جایگزین می‌شود.
+ * مقصد موقت ماژول‌هایی که Backend کامل آن‌ها هنوز ساخته نشده است.
+ * این صفحه در مرحله تکمیل هر Feature با Screen واقعی جایگزین می‌شود.
  */
 @Composable
-private fun ProfileFeatureScreen(
-    uiConfig: BusinessUiConfig,
-    item: DashboardItemConfig
-) {
+private fun ProfileFeatureScreen(uiConfig: BusinessUiConfig, item: DashboardItemConfig) {
     Surface(modifier = Modifier.fillMaxSize()) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(20.dp)
-        ) {
-            Text(
-                text = item.title,
-                style = MaterialTheme.typography.headlineSmall
-            )
+        Column(modifier = Modifier.fillMaxSize().padding(20.dp)) {
+            Text(item.title, style = MaterialTheme.typography.headlineSmall)
             Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = "ظاهر فعال: ${uiConfig.themeId}",
-                style = MaterialTheme.typography.bodyMedium
-            )
-            Text(
-                text = "مجموعه تصویر: ${uiConfig.illustrationSetId}",
-                style = MaterialTheme.typography.bodyMedium
-            )
+            Text("ظاهر فعال: ${uiConfig.themeId}", style = MaterialTheme.typography.bodyMedium)
+            Text("مجموعه تصویر: ${uiConfig.illustrationSetId}", style = MaterialTheme.typography.bodyMedium)
         }
     }
 }
 
-/** مقصد عمومی برای Routeهایی که مستقل از Business Profile از Runtime ثبت می‌شوند. */
 @Composable
 private fun RuntimeFeatureScreen(route: RouteDefinition) {
     Surface(modifier = Modifier.fillMaxSize()) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(20.dp)
-        ) {
-            Text(
-                text = "ماژول فعال",
-                style = MaterialTheme.typography.headlineSmall
-            )
+        Column(modifier = Modifier.fillMaxSize().padding(20.dp)) {
+            Text("ماژول فعال", style = MaterialTheme.typography.headlineSmall)
             Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = route.route,
-                style = MaterialTheme.typography.bodyLarge
-            )
+            Text(route.route, style = MaterialTheme.typography.bodyLarge)
         }
     }
 }

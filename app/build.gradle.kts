@@ -24,6 +24,8 @@ android {
 
     buildFeatures {
         compose = true
+        // AppConfig نسخه را از BuildConfig می‌خواند؛ فعال‌سازی صریح برای AGP جدید لازم است.
+        buildConfig = true
     }
 
     kotlinOptions { jvmTarget = "17" }
