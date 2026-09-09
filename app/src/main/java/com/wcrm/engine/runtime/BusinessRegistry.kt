@@ -16,4 +16,8 @@ class BusinessRegistry {
     fun getProfile(id: String): BusinessProfile? {
         return profiles[id]
     }
+
+    fun getDefaultProfile(): BusinessProfile {
+        return profiles.values.firstOrNull() ?: BusinessProfile(id = "default")
+    }
 }
