@@ -2,7 +2,7 @@ name: Android Build
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, restore-crm-complete ]
   pull_request:
     branches: [ main ]
   workflow_dispatch:
