@@ -14,10 +14,13 @@ class RuntimeInitializer @Inject constructor(
 ) {
     fun initialize(): RuntimeContext {
         val profile = resolveDefaultProfile()
+        val enabledFeatures = profile.modules.mapNotNull { moduleName ->
+            runCatching { FeatureFlag.valueOf(moduleName) }.getOrNull()
+        }.toSet()
 
         return RuntimeContext(
             profile = profile,
-            enabledFeatures = profile.features.toSet()
+            enabledFeatures = enabledFeatures
         )
     }
 
