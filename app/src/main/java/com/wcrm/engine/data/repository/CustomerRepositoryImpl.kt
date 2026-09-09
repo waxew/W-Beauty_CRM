@@ -12,12 +12,20 @@ class CustomerRepositoryImpl : CustomerRepository {
 
     private val items = mutableListOf<Customer>()
 
-    override suspend fun getCustomers(): List<Customer> {
+    override fun save(customer: Customer) {
+        items.removeIf { it.id == customer.id }
+        items.add(customer)
+    }
+
+    override fun findById(id: String): Customer? {
+        return items.firstOrNull { it.id == id }
+    }
+
+    suspend fun getCustomers(): List<Customer> {
         return items.toList()
     }
 
-    override suspend fun saveCustomer(customer: Customer) {
-        items.removeIf { it.id == customer.id }
-        items.add(customer)
+    suspend fun saveCustomer(customer: Customer) {
+        save(customer)
     }
 }
