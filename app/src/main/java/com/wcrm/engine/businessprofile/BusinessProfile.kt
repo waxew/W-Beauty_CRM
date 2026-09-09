@@ -1,15 +1,22 @@
 package com.wcrm.engine.businessprofile
 
 /**
- * Defines a business configuration independently from CRM core logic.
- * Business types are runtime configurations, not core modules.
+ * تعریف مستقل هر نوع کسب‌وکار.
+ *
+ * enabled توسط برنامه‌نویس تنظیم می‌شود. در خروجی نهایی فقط Profileهایی که
+ * enabled=true دارند قابل استفاده/نمایش هستند. برای نسخه‌های اختصاصی بهتر است
+ * دقیقاً یک Profile فعال باشد.
  */
 data class BusinessProfile(
     val id: String,
     val name: String = id,
+    val enabled: Boolean = false,
     val enabledModules: List<String> = emptyList(),
     val enabledFeatures: List<String> = emptyList(),
-    val schemaIds: List<String> = emptyList()
+    val schemaIds: List<String> = emptyList(),
+    val visualProfileId: String = id,
+    val dashboardProfileId: String = id,
+    val terminologyProfileId: String = id
 ) {
     /**
      * Compatibility view used while migrating older profile definitions.
