@@ -29,12 +29,12 @@ object RuntimeModule {
     @Provides
     @Singleton
     fun provideRouteRegistry(): RouteRegistry {
-        return RouteRegistry()
+        return RouteRegistry(emptyList())
     }
 
     @Provides
     @Singleton
     fun provideRuntimeNavigationResolver(): RuntimeNavigationResolver {
-        return RuntimeNavigationResolver()
+        return RuntimeNavigationResolver(emptyList())
     }
 }
