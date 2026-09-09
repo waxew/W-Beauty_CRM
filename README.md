@@ -2,167 +2,217 @@
 
 ## معرفی پروژه
 
-W-CRM یک هسته CRM مستقل از نوع کسب‌وکار است که با Kotlin و Jetpack Compose توسعه داده می‌شود.
+W-CRM یک موتور CRM عمومی مبتنی بر Kotlin و Jetpack Compose است که برای ساخت چندین برنامه مستقل از یک هسته مشترک طراحی شده است.
 
-هدف پروژه این است که از یک سورس بتوان نسخه‌های مختلف CRM برای صنایع مختلف تولید کرد.
+هدف پروژه:
 
-نمونه‌ها:
-
-- CRM سالن زیبایی
-- CRM کلینیک
-- CRM شرکت فروش
-- CRM خدماتی
-- CRM املاک
-- CRM فروشگاهی
+- یک Core مشترک
+- چند Business Profile مستقل
+- ساخت نسخه‌های اختصاصی برای هر کسب‌وکار بدون کپی کردن کل پروژه
 
 ---
 
-# معماری اصلی
+# معماری کلان
 
 ```
-CRM Core Engine
-        |
-        +---- Business Profile System
-        |
-        +---- CRM Modules
-        |
-        +---- Custom Field Engine
-        |
-        +---- Database Layer
-        |
-        +---- Future Extensions (Ads Platform)
+App Config
+    |
+    +-- Application Identity
+    +-- Theme
+    +-- Ads
+    +-- Update System
+    |
+Business Profile Engine
+    |
+    +-- Enabled Modules
+    +-- Schema Configuration
+    +-- Dashboard Layout
+    +-- UI Theme
+    +-- Assets
+    |
+CRM Core
+    |
+    +-- Domain
+    +-- Data
+    +-- Repository
+    +-- UseCase
+    +-- UI
 ```
 
-Core نباید شامل منطق اختصاصی یک صنعت باشد.
+---
+
+# App Config
+
+تمام اطلاعات اختصاصی هر برنامه باید در یک نقطه مرکزی تعریف شود.
+
+نمونه اطلاعات:
+
+- نام برنامه
+- نام شرکت
+- لوگو
+- آیکون
+- رنگ اصلی
+- اطلاعات تماس
+- تنظیمات تبلیغات
+- تنظیمات آپدیت
+- تنظیمات Splash و Logo Motion
+
+هدف: ساخت برنامه جدید فقط با تغییر Configuration انجام شود، نه تغییر پراکنده در کد.
 
 ---
 
 # Business Profile System
 
-Business Profile مشخص می‌کند هر نسخه CRM چه تنظیماتی دارد:
+نوع کسب‌وکار توسط توسعه‌دهنده تعیین می‌شود.
 
-- نام CRM
-- نام سازمان
-- لوگو
-- رنگ سازمانی
-- تصاویر
-- متن‌ها
-- Package Configuration
-- Module های فعال
-- Attribute Schema های فعال
+هر Profile دارای وضعیت فعال/غیرفعال است:
+
+```
+mobile_store = true
+boutique = false
+jewelry_store = false
+```
+
+در هر نسخه فقط Profile فعال بارگذاری می‌شود.
 
 ---
 
-# تفاوت Module و Attribute Schema
+# پروفایل‌های کسب‌وکار
 
-## Module
+- Mobile Store
+- Boutique
+- Cosmetics Store
+- Home Appliance
+- Auto Parts
+- Jewelry Store
+- Book Store
+- Grocery
+- Pet Store
+- Omnichannel
 
-برای قابلیت‌هایی که دارای منطق و Workflow هستند:
+هر Profile می‌تواند داشته باشد:
+
+- داشبورد اختصاصی
+- آیکون و تصاویر اختصاصی
+- فیلدهای اختصاصی
+- Theme اختصاصی
+- Moduleهای فعال
+
+---
+
+# تفاوت Module و Schema
+
+Module برای منطق برنامه است:
 
 - Customer
+- Product
 - Sales
 - Invoice
-- Reservation
-- Appointment
+- Inventory
 - Warranty
 - Repair
 - Delivery
 
-## Attribute Schema
+Schema برای اطلاعات متغیر کسب‌وکار است.
 
-برای اطلاعات متغیر کسب‌وکار:
+مثال:
 
-کلینیک:
-
-- Blood Type
-- Medical Notes
-
-سالن زیبایی:
-
-- Skin Type
-- Hair History
-
-فروشگاه:
-
-- IMEI
-- Size
-- Serial Number
-
-این موارد نباید Field ثابت Core Entity باشند.
-
----
-
-# قوانین Core
-
-صحیح:
+موبایل:
 
 ```
-Customer Core
-        +
-Custom Field Engine
-        +
-Attribute Schema
+IMEI
+Brand
+Model
+Storage
+Color
 ```
 
-غلط:
+بوتیک:
 
 ```
-Customer {
- skinType
- bloodType
- imei
-}
+Size
+Color
+Material
+Season
 ```
 
 ---
 
-# Business Profile های فعلی
+# Ads System
 
-CRM:
-
-```
-beauty_center_001
-clinic_001
-sales_company_001
-realestate_001
-service_company_001
-```
-
-Store:
+تبلیغات باید از App Config کنترل شود.
 
 ```
-mobile_store_001
-boutique_store_001
-cosmetics_store_001
-home_appliance_store_001
-auto_parts_store_001
-jewelry_store_001
-book_store_001
-grocery_store_001
-pet_store_001
-omnichannel_store_001
+ads.enabled = true / false
 ```
+
+قوانین:
+
+- کاربر VIP فعال: تبلیغ نمایش داده نمی‌شود.
+- کاربر مهمان یا اشتراک منقضی: تبلیغ فعال می‌شود.
 
 ---
 
-# ساخت CRM جدید
+# Update System
 
-1. ایجاد Business Profile جدید
-2. تعیین Industry Type
-3. فعال کردن Moduleهای مورد نیاز
-4. تعریف Attribute Schema
-5. عدم تغییر Core
+برنامه در شروع اجرا نسخه جدید را بررسی می‌کند.
+
+در صورت وجود نسخه جدید:
+
+- Popup نمایش داده می‌شود.
+- Notification نمایش داده می‌شود.
+- نشان قرمز کنار بخش اعلان‌ها فعال می‌شود.
+
+---
+
+# ساختار UI عمومی
+
+تمام برنامه‌ها دارای:
+
+- Header سه بخشی
+- Drawer مشترک
+- Profile User
+- Settings
+- About
+- Contact Us
+- Backup / Restore
+- Update
+
+اما محتوای Dashboard و صفحات بر اساس Business Profile تغییر می‌کند.
+
+---
+
+# Backup و Restore
+
+Backup:
+
+- خروجی گرفتن از اطلاعات کاربر
+- ذخیره فایل پشتیبان
+
+Restore:
+
+- انتخاب فایل از File Manager
+- بازیابی اطلاعات
+
+---
+
+# اصول توسعه
+
+1. Core نباید وابسته به صنعت باشد.
+2. اطلاعات ثابت در Config قرار می‌گیرند.
+3. از Hard Code کردن اطلاعات کسب‌وکار جلوگیری می‌شود.
+4. هر تغییر باید با توضیحات فارسی ثبت شود.
+5. قبل از حذف هر Feature باید بررسی معماری انجام شود.
 
 ---
 
 # وضعیت توسعه
 
-تمرکز فعلی:
+مراحل فعلی:
 
-- تکمیل Business Profile Runtime
-- تکمیل Module Engine
-- تکمیل Custom Field Engine
-- Refactor Core Entityها
-- Build نهایی
-
-تمام توسعه‌ها باید معماری مستقل از Industry را حفظ کنند.
+- تکمیل Business Profile Engine
+- تکمیل App Config
+- تکمیل UI Framework مشترک
+- اتصال Moduleها به Backend واقعی
+- تکمیل Dynamic Schema
+- تست نهایی Build و Release
