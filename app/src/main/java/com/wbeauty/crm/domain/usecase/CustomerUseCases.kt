@@ -1,5 +1,6 @@
 package com.wbeauty.crm.domain.usecase
 
+import com.wbeauty.crm.data.local.entity.CustomerEntity
 import com.wbeauty.crm.data.repository.CustomerRepository
 import javax.inject.Inject
 
@@ -13,6 +14,11 @@ class AddCustomerUseCase @Inject constructor(
     private val repository: CustomerRepository
 ) {
     suspend operator fun invoke(name: String, phone: String) {
-        repository.addCustomer(name, phone)
+        repository.addCustomer(
+            CustomerEntity(
+                name = name,
+                phone = phone
+            )
+        )
     }
 }
