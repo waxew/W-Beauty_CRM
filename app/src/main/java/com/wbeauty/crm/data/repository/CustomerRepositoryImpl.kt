@@ -9,7 +9,7 @@ class CustomerRepositoryImpl @Inject constructor(
     private val dao: CustomerDao
 ) : CustomerRepository {
 
-    override fun getCustomers(): Flow<List<CustomerEntity>> = dao.getCustomers()
+    override fun getCustomers(): Flow<List<CustomerEntity>> = dao.getAll()
 
     override suspend fun addCustomer(customer: CustomerEntity) {
         dao.insert(customer)
