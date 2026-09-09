@@ -1,11 +1,17 @@
 name: Android Release
 
 on:
+  workflow_dispatch:
   push:
     branches: [ main ]
-  pull_request:
-    branches: [ main ]
-  workflow_dispatch:
+    paths:
+      - '.github/workflows/android-build.yml'
+      - 'app/**'
+      - 'core/**'
+      - 'business_profile/**'
+      - 'runtime/**'
+      - 'build.gradle.kts'
+      - 'settings.gradle.kts'
 
 permissions:
   contents: write
@@ -14,9 +20,6 @@ jobs:
   release:
     runs-on: ubuntu-latest
     timeout-minutes: 30
-
-    env:
-      KEYSTORE_PATH: ${{ runner.temp }}/MasterKey.jks
 
     steps:
       - name: Checkout
@@ -28,53 +31,101 @@ jobs:
           distribution: temurin
           java-version: '17'
 
-      - name: Setup Gradle
+      - name: Setup Gradle 8.10.2
         uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: '8.10.2'
 
-      - name: Restore signing key
+      - name: Restore and validate signing key
         env:
           KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
         run: |
           set -euo pipefail
+          test -n "$KEYSTORE_BASE64"
+          test -n "$KEYSTORE_PASSWORD"
+          test -n "$KEY_ALIAS"
+          KEYSTORE_PATH="$RUNNER_TEMP/MasterKey.jks"
+          umask 077
           printf '%s' "$KEYSTORE_BASE64" | base64 --decode > "$KEYSTORE_PATH"
-          keytool -list -keystore "$KEYSTORE_PATH" -storepass "$KEYSTORE_PASSWORD" -alias "$KEY_ALIAS"
+          keytool -list -keystore "$KEYSTORE_PATH" -storepass "$KEYSTORE_PASSWORD" -alias "$KEY_ALIAS" > /dev/null
 
-      - name: Build signed release
+      - name: Build release APK
+        run: gradle --no-daemon clean :app:assembleRelease --stacktrace
+
+      - name: Sign, verify and package release
         env:
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
         run: |
-          gradle --no-daemon clean assembleRelease --stacktrace
-
-      - name: Verify APK signature
-        run: |
           set -euo pipefail
-          APK=$(find app/build/outputs/apk/release -name '*.apk' | head -1)
-          TOOL=$(find "$ANDROID_HOME/build-tools" -name apksigner | sort | tail -1)
-          mkdir -p dist
-          cp "$APK" dist/W-CRM-release.apk
-          "$TOOL" verify --verbose --print-certs dist/W-CRM-release.apk
-          sha256sum dist/W-CRM-release.apk > dist/SHA256SUMS.txt
+          test -n "$KEYSTORE_PASSWORD"
+          test -n "$KEY_ALIAS"
+          test -n "$KEY_PASSWORD"
 
-      - name: Upload Release Artifact
+          KEYSTORE_PATH="$RUNNER_TEMP/MasterKey.jks"
+          BT=$(find "$ANDROID_HOME/build-tools" -mindepth 1 -maxdepth 1 -type d | sort -V | tail -1)
+          test -n "$BT"
+          test -x "$BT/zipalign"
+          test -x "$BT/apksigner"
+          test -x "$BT/aapt"
+
+          APK=$(find app/build/outputs/apk/release -maxdepth 1 -name '*.apk' | head -1)
+          test -n "$APK"
+
+          mkdir -p dist
+          "$BT/zipalign" -f -p 4 "$APK" "$RUNNER_TEMP/W-CRM-aligned.apk"
+          "$BT/apksigner" sign \
+            --ks "$KEYSTORE_PATH" \
+            --ks-pass env:KEYSTORE_PASSWORD \
+            --ks-key-alias "$KEY_ALIAS" \
+            --key-pass env:KEY_PASSWORD \
+            --out dist/W-CRM-release.apk \
+            "$RUNNER_TEMP/W-CRM-aligned.apk"
+
+          "$BT/apksigner" verify --verbose --print-certs dist/W-CRM-release.apk > dist/signature.txt
+          "$BT/aapt" dump badging dist/W-CRM-release.apk > "$RUNNER_TEMP/badging.txt"
+
+          python3 - <<'PY'
+          import os, pathlib, re
+          line = pathlib.Path(os.environ['RUNNER_TEMP'] + '/badging.txt').read_text().splitlines()[0]
+          attrs = dict(re.findall(r"(\w+)='([^']*)'", line))
+          version = attrs.get('versionName', '1.0')
+          code = attrs.get('versionCode', '1')
+          package = attrs.get('name', 'com.wcrm.engine')
+          safe = re.sub(r'[^a-zA-Z0-9._-]', '_', version)
+          src = pathlib.Path('dist/W-CRM-release.apk')
+          final = pathlib.Path(f'dist/W-CRM-v{safe}-{code}-release.apk')
+          src.rename(final)
+          tag = f'v{safe}-build-{os.environ["GITHUB_RUN_NUMBER"]}'
+          with open(os.environ['GITHUB_ENV'], 'a') as f:
+              f.write(f'RELEASE_TAG={tag}\n')
+              f.write(f'RELEASE_APK={final}\n')
+          pathlib.Path('dist/release-notes.md').write_text(
+              f'W-CRM\n\nVersion: {version}\nVersion code: {code}\nApplication ID: {package}\nCommit: {os.environ["GITHUB_SHA"]}\n\nSigned with the configured MasterKey and verified with apksigner.\n'
+          )
+          PY
+
+          sha256sum dist/*.apk > dist/SHA256SUMS.txt
+
+      - name: Upload signed release artifact
         uses: actions/upload-artifact@v4
         with:
           name: W-CRM-signed-release
           path: dist/
+          if-no-files-found: error
 
-      - name: Create GitHub Release
-        if: github.event_name != 'pull_request'
+      - name: Publish GitHub Release
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          TAG="v1.0.0-build-${GITHUB_RUN_NUMBER}"
-          gh release create "$TAG" dist/W-CRM-release.apk dist/SHA256SUMS.txt --title "$TAG" --generate-notes
+          gh release create "$RELEASE_TAG" "$RELEASE_APK" dist/signature.txt dist/SHA256SUMS.txt \
+            --target "$GITHUB_SHA" \
+            --title "$RELEASE_TAG" \
+            --notes-file dist/release-notes.md
 
-      - name: Cleanup
+      - name: Cleanup signing key
         if: always()
-        run: rm -f "$KEYSTORE_PATH"
+        run: rm -f "$RUNNER_TEMP/MasterKey.jks"
