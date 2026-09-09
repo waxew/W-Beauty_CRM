@@ -23,21 +23,27 @@ import androidx.navigation.compose.rememberNavController
 import com.wbeauty.crm.feature.customer.CustomerAddScreen
 import com.wbeauty.crm.feature.customer.CustomerRoutes
 import com.wbeauty.crm.feature.customer.CustomerScreen
+import com.wcrm.engine.businessprofile.BusinessProfileCatalog
+import com.wcrm.engine.businessprofile.BusinessUiConfig
+import com.wcrm.engine.businessprofile.DashboardItemConfig
 
 private const val HOME_ROUTE = "home"
 
 /**
  * ناوبری اصلی برنامه CRM.
  *
- * صفحه خانه دیگر یک کانتینر خالی نیست و مسیرهای واقعی ماژول مشتریان
- * به رابط کاربری متصل شده‌اند. مسیرهای Runtime نیز همچنان به صورت پویا
- * قابل اضافه شدن هستند تا معماری ماژولار پروژه حفظ شود.
+ * UI از Business Profile فعال خوانده می‌شود. در نتیجه با تغییر enabled بین ده Profile،
+ * عنوان صفحه خانه، کارت‌های داشبورد، واژگان و مقصدهای نمایشی نیز تغییر می‌کنند.
  */
 @Composable
 fun AppNavigation(
     routes: List<RouteDefinition> = emptyList()
 ) {
     val navController = rememberNavController()
+    val activeProfile = BusinessProfileCatalog.requireActiveProfile()
+    val uiConfig = requireNotNull(activeProfile.ui) {
+        "Business Profile فعال باید uiConfig داشته باشد: ${activeProfile.id}"
+    }
 
     CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
         NavHost(
@@ -46,8 +52,12 @@ fun AppNavigation(
         ) {
             composable(HOME_ROUTE) {
                 HomeScreen(
-                    onCustomersClick = {
-                        navController.navigate(CustomerRoutes.LIST)
+                    uiConfig = uiConfig,
+                    onDashboardItemClick = { item ->
+                        when (item.route) {
+                            CustomerRoutes.LIST -> navController.navigate(CustomerRoutes.LIST)
+                            else -> navController.navigate(item.route)
+                        }
                     }
                 )
             }
@@ -68,27 +78,45 @@ fun AppNavigation(
                 )
             }
 
-            routes.forEach { route ->
-                if (route.route != HOME_ROUTE &&
-                    route.route != CustomerRoutes.LIST &&
-                    route.route != CustomerRoutes.ADD
-                ) {
+            // تمام Routeهای داشبورد Profile فعال ثبت می‌شوند تا UI با صنف انتخابی هماهنگ باشد.
+            uiConfig.dashboardItems
+                .map { it.route }
+                .distinct()
+                .filter { it != CustomerRoutes.LIST && it != CustomerRoutes.ADD && it != HOME_ROUTE }
+                .forEach { route ->
+                    composable(route) {
+                        ProfileFeatureScreen(
+                            uiConfig = uiConfig,
+                            item = uiConfig.dashboardItems.first { it.route == route }
+                        )
+                    }
+                }
+
+            // Routeهای Runtime خارجی نیز حفظ می‌شوند و با Routeهای Profile تداخل نمی‌کنند.
+            routes
+                .filter { route ->
+                    route.route != HOME_ROUTE &&
+                        route.route != CustomerRoutes.LIST &&
+                        route.route != CustomerRoutes.ADD &&
+                        uiConfig.dashboardItems.none { it.route == route.route }
+                }
+                .forEach { route ->
                     composable(route.route) {
                         RuntimeFeatureScreen(route = route)
                     }
                 }
-            }
         }
     }
 }
 
 /**
- * داشبورد اصلی CRM.
- * این صفحه نقطه ورود قابل مشاهده و کاربردی برنامه است و به ماژول‌های واقعی وصل می‌شود.
+ * داشبورد Profile-aware.
+ * این Screen برای هر ده کسب‌وکار مشترک است، اما محتوا و کارت‌ها از Profile فعال می‌آیند.
  */
 @Composable
 private fun HomeScreen(
-    onCustomersClick: () -> Unit
+    uiConfig: BusinessUiConfig,
+    onDashboardItemClick: (DashboardItemConfig) -> Unit
 ) {
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -101,41 +129,66 @@ private fun HomeScreen(
             verticalArrangement = Arrangement.Top
         ) {
             Text(
-                text = "W-CRM",
+                text = uiConfig.homeTitle,
                 style = MaterialTheme.typography.headlineMedium
             )
 
             Spacer(modifier = Modifier.height(8.dp))
 
             Text(
-                text = "مدیریت ارتباط با مشتریان و کسب‌وکار",
+                text = uiConfig.homeSubtitle,
                 style = MaterialTheme.typography.bodyLarge
             )
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            Button(
-                onClick = onCustomersClick,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text("مدیریت مشتریان")
+            uiConfig.dashboardItems.forEach { item ->
+                Button(
+                    onClick = { onDashboardItemClick(item) },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(item.title)
+                }
+                Spacer(modifier = Modifier.height(10.dp))
             }
+        }
+    }
+}
 
-            Spacer(modifier = Modifier.height(12.dp))
-
+/**
+ * صفحه موقتِ Profile-aware برای ماژول‌هایی که Backend اختصاصی آن‌ها هنوز تکمیل نشده است.
+ * این صفحه عمداً اطلاعات Profile را نمایش می‌دهد تا هیچ Route به صفحه سفید ختم نشود؛
+ * در مراحل بعد با Screen/ViewModel/UseCase/Repository واقعی هر ماژول جایگزین می‌شود.
+ */
+@Composable
+private fun ProfileFeatureScreen(
+    uiConfig: BusinessUiConfig,
+    item: DashboardItemConfig
+) {
+    Surface(modifier = Modifier.fillMaxSize()) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(20.dp)
+        ) {
             Text(
-                text = "هسته ماژولار CRM فعال است. قابلیت‌های هر کسب‌وکار از Business Profile و Runtime بارگذاری می‌شوند.",
+                text = item.title,
+                style = MaterialTheme.typography.headlineSmall
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = "ظاهر فعال: ${uiConfig.themeId}",
+                style = MaterialTheme.typography.bodyMedium
+            )
+            Text(
+                text = "مجموعه تصویر: ${uiConfig.illustrationSetId}",
                 style = MaterialTheme.typography.bodyMedium
             )
         }
     }
 }
 
-/**
- * مقصد عمومی برای مسیرهایی که از Runtime ثبت می‌شوند.
- * به جای صفحه کاملاً خالی، حداقل اطلاعات مسیر فعال را نمایش می‌دهد تا
- * هیچ Route قابل دسترسی به صفحه سفید منتهی نشود.
- */
+/** مقصد عمومی برای Routeهایی که مستقل از Business Profile از Runtime ثبت می‌شوند. */
 @Composable
 private fun RuntimeFeatureScreen(route: RouteDefinition) {
     Surface(modifier = Modifier.fillMaxSize()) {
