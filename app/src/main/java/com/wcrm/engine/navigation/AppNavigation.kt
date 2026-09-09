@@ -27,16 +27,15 @@ import com.wbeauty.crm.feature.customer.CustomerRoutes
 import com.wbeauty.crm.feature.customer.CustomerScreen
 import com.wcrm.engine.businessprofile.BusinessUiConfig
 import com.wcrm.engine.businessprofile.DashboardItemConfig
-import com.wcrm.engine.businessprofile.ProfileRegistry
+import com.wcrm.engine.businessprofile.ProfileEngine
 
 private const val HOME_ROUTE = "home"
 
 /**
  * ناوبری اصلی برنامه CRM.
  *
- * Profile فعال دیگر از یک لیست Hardcode خوانده نمی‌شود. Registry در زمان اجرا
- * تمام فایل‌های assets/business_profiles را کشف می‌کند و تنها Profile فعال را
- * در اختیار UI قرار می‌دهد.
+ * تمام اطلاعات Profile از ProfileEngine گرفته می‌شود. در نتیجه Navigation هیچ نام
+ * صنعت یا لیست Hardcode از Profileها ندارد و افزودن Profile جدید نیازمند تغییر این فایل نیست.
  */
 @Composable
 fun AppNavigation(
@@ -44,8 +43,8 @@ fun AppNavigation(
 ) {
     val context = LocalContext.current.applicationContext
     val navController = rememberNavController()
-    val profileRegistry = remember(context) { ProfileRegistry.fromAssets(context) }
-    val activeProfile = remember(profileRegistry) { profileRegistry.requireSingleEnabled() }
+    val profileEngine = remember(context) { ProfileEngine.create(context) }
+    val activeProfile = profileEngine.activeProfile
     val uiConfig = requireNotNull(activeProfile.ui) {
         "Business Profile فعال باید uiConfig داشته باشد: ${activeProfile.id}"
     }
@@ -74,7 +73,7 @@ fun AppNavigation(
                 )
             }
 
-            // Routeهای داشبورد بدون شناخت نوع کسب‌وکار از Profile فعال ساخته می‌شوند.
+            // Routeهای داشبورد مستقیماً از Profile فعال ساخته می‌شوند.
             uiConfig.dashboardItems
                 .map { it.route }
                 .distinct()
@@ -102,7 +101,7 @@ fun AppNavigation(
     }
 }
 
-/** داشبورد عمومی که تمام محتوا و ترتیب کارت‌ها را از Profile فعال می‌گیرد. */
+/** داشبورد عمومی که محتوا و ترتیب کارت‌ها را از Profile فعال دریافت می‌کند. */
 @Composable
 private fun HomeScreen(
     uiConfig: BusinessUiConfig,
@@ -128,10 +127,7 @@ private fun HomeScreen(
     }
 }
 
-/**
- * مقصد موقت ماژول‌هایی که Backend کامل آن‌ها هنوز ساخته نشده است.
- * این صفحه در مرحله تکمیل هر Feature با Screen واقعی جایگزین می‌شود.
- */
+/** مقصد موقت برای Featureهایی که Backend کامل آن‌ها هنوز تکمیل نشده است. */
 @Composable
 private fun ProfileFeatureScreen(uiConfig: BusinessUiConfig, item: DashboardItemConfig) {
     Surface(modifier = Modifier.fillMaxSize()) {
