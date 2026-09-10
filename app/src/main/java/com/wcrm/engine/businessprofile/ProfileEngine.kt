@@ -22,12 +22,27 @@ class ProfileEngine private constructor(
             val appContext = context.applicationContext
             val registry = ProfileRegistry.fromAssets(appContext)
             val schemaLoader = SchemaLoader(appContext)
+
+            /*
+             * همه Profileها، حتی Profileهای غیرفعال، در زمان راه‌اندازی Audit می‌شوند.
+             * در نتیجه اگر بعداً توسعه‌دهنده Profile دیگری را فعال کند، خطای Schema مخفی
+             * تا زمان انتشار نسخه باقی نمی‌ماند.
+             */
+            registry.all().forEach { profile ->
+                schemaLoader.validateReferences(profile.id, profile.schemaIds)
+            }
+
             val activeProfile = registry.requireSingleEnabled()
             val runtime = BusinessProfileLoader().load(activeProfile, schemaLoader)
 
-            // این مرحله تضمین می‌کند همه schemaIds پروفایل فعال واقعاً موجود هستند.
-            require(runtime.schemaIds.size == activeProfile.schemaIds.size) {
-                "تعداد Schemaهای Runtime با تعریف Profile سازگار نیست."
+            // Runtime باید دقیقاً همان Schemaهایی را حمل کند که در Profile فعال تعریف شده‌اند.
+            require(runtime.schemaIds == activeProfile.schemaIds) {
+                "Schemaهای Runtime با تعریف Profile '${activeProfile.id}' سازگار نیستند."
+            }
+
+            // Runtime نباید ماژولی را حذف یا اضافه کند؛ منبع حقیقت همان Profile است.
+            require(runtime.enabledModules == activeProfile.modules) {
+                "ماژول‌های Runtime با تعریف Profile '${activeProfile.id}' سازگار نیستند."
             }
 
             return ProfileEngine(
