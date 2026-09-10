@@ -1,9 +1,13 @@
 package com.wcrm.engine.runtime.shared
 
+import com.wcrm.engine.businessprofile.BusinessModule
+import com.wcrm.engine.businessprofile.BusinessProfile
+
 /**
- * Runtime state container shared by application services.
+ * وضعیت Runtime فعال برنامه.
+ * این Context منبع واحد UI برای تشخیص پروفایل، ماژول‌ها و فیلدهای اختصاصی است.
  */
 data class RuntimeContext(
-    val activeProfile: String,
-    val enabledFeatures: Set<String> = emptySet()
+    val profile: BusinessProfile,
+    val enabledModules: Set<BusinessModule> = profile.modules
 )
