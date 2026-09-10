@@ -1,14 +1,19 @@
 package com.wcrm.engine.runtime.shared
 
-class RuntimeBootstrap(
-    private val context: RuntimeContext,
-    private val registry: RuntimeRegistry
-) {
+import com.wcrm.engine.businessprofile.BusinessProfileRegistry
 
-    fun initialize(profile: String): RuntimeContext {
-        return context.copy(
-            activeProfile = profile,
-            enabledFeatures = registry.modules()
+/**
+ * نقطه شروع Runtime.
+ * پروفایل فعال را از Registry می‌گیرد و Context معتبر برای UI/Featureها می‌سازد.
+ */
+class RuntimeBootstrap(
+    private val registry: RuntimeRegistry = RuntimeRegistry()
+) {
+    fun initialize(): RuntimeContext {
+        val profile = BusinessProfileRegistry.activeProfile()
+        return RuntimeContext(
+            profile = profile,
+            enabledModules = registry.modules()
         )
     }
 }
