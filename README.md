@@ -93,4 +93,24 @@ Boutique:
 - Accounting
 - Delivery
 
-تمام تغییرات باید بدون حذف قابلیت‌های موجود، با Commit واقعی و بررسی Build انجام شوند.
+## قوانین توسعه
+
+- هیچ قابلیتی برای گرفتن Build سریع حذف یا کوچک نمی‌شود.
+- هر تغییر باید ابتدا داخل Repository اعمال شود.
+- هر مرحله فقط بعد از Commit واقعی قابل تأیید است.
+- بعد از تغییرات مهم باید Build و تست بررسی شود.
+
+## وضعیت توسعه
+
+```
+Core Architecture        ✅
+Business Profile Engine  🟡
+Customer Backend         🟡
+Product Backend          🟡
+Inventory                ⏳
+Sales                    ⏳
+Invoice                  ⏳
+Custom Field Engine      ⏳
+Dynamic Navigation       ⏳
+Security / Backup        ⏳
+```
