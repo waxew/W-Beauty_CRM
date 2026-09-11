@@ -5,13 +5,12 @@ package core.inventory
  *
  * این کلاس نقطه اتصال UseCase های موجودی با رابط کاربری است.
  * منطق کسب و کار در Repository و UseCase باقی می ماند
- * و UI فقط وضعیت مورد نیاز خود را دریافت می کند.
+ * و UI فقط Event ارسال می کند.
  */
 class InventoryViewModel(
     private val inventoryUseCases: InventoryUseCases
-) {
+) : InventoryEventHandler {
 
-    // وضعیت فعلی موجودی برای نمایش در UI
     private var currentInventory: InventoryEntity? = null
 
     /**
@@ -34,5 +33,18 @@ class InventoryViewModel(
      */
     fun removeStock(productId: String, quantity: Int) {
         inventoryUseCases.removeStock(productId, quantity)
+    }
+
+    /**
+     * پردازش Event های UI
+     */
+    override fun handle(event: InventoryUiEvent) {
+        when (event) {
+            is InventoryUiEvent.AddStock -> addStock(event.productId, event.quantity)
+            is InventoryUiEvent.RemoveStock -> removeStock(event.productId, event.quantity)
+            InventoryUiEvent.Refresh -> {
+                // Refresh توسط Screen یا لایه State مدیریت می‌شود
+            }
+        }
     }
 }
